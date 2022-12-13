@@ -1,0 +1,198 @@
+// Connor McKenna
+// CS 17
+// Unit 15 Assignment
+// Swapper Function
+
+program Program_15;
+
+#include ("stdlib.hhf");
+  static
+	m_X : int16 := 0; 
+	m_Y : int16 := 0;
+	m_Z : int16 := 0;
+
+procedure swapper( var x : int16; var y : int16; var z : int16 ); @nodisplay; @noframe;
+
+  static
+
+	least    : int16 := 0;
+	middle   : int16 := 0;
+	greatest : int16 := 0;
+
+	ReturnAddress : dWord;
+
+	EBX_Register  : dword := 0; 
+	ECX_Register  : dword := 0; 
+	EDX_Register  : dword := 0; 
+
+begin swapper;
+
+	mov( EBX, EDX_Register );
+	mov( ECX, ECX_Register );
+	mov( EDX, EBX_Register );
+
+	pop( ReturnAddress );
+
+	pop( EBX ); 
+	pop( ECX ); 
+	pop( EDX ); 
+
+	push( ReturnAddress );
+
+	push( EDX_Register );
+	push( ECX_Register );
+	push( EBX_Register );
+
+	mov( EBX, EBX_Register ); 
+	mov( ECX, ECX_Register ); 
+	mov( EDX, EDX_Register ); 
+
+
+	HEAD:
+		mov(0, EAX);
+		mov([EBX], EAX);
+		mov(AX, BX); 
+
+		mov(0, EAX);
+		mov([ECX], EAX);
+		mov(AX, CX); 
+
+		mov(0, EAX);
+		mov([EDX], EAX);
+		mov(AX, DX);
+
+	COMPARE_X_TO_Y:
+		cmp( DX, CX ); 
+		jg  X_GREATER_THAN_Y;
+		jmp COMPARE_X_TO_Z;
+
+	X_GREATER_THAN_Y:
+		cmp(DX, BX);
+		jg  GREATEST_EQUALS_X;
+		jmp ORDER_OF_Y_X_Z;
+
+	GREATEST_EQUALS_X:
+		mov(DX, greatest);
+		jmp X_IS_LARGEST;
+
+	X_IS_LARGEST:
+		cmp(CX, BX);
+		jg ORDER_OF_Z_Y_X;
+		jmp ORDER_OF_Y_Z_X;
+
+	COMPARE_X_TO_Z:
+		cmp( DX, BX ); //compare X to Z
+		jg  ORDER_OF_Z_X_Y;
+		jmp LEAST_EQUALS_X;
+
+	LEAST_EQUALS_X:
+		mov(DX, least);
+		jmp X_IS_SMALLEST;
+
+	X_IS_SMALLEST:
+		cmp(CX, BX);
+		jg  ORDER_OF_X_Z_Y;
+		jmp ORDER_OF_X_Y_Z;
+	
+	//setters
+
+	ORDER_OF_Z_X_Y:
+		mov(CX, greatest);
+		mov(BX, least);
+		mov(DX, middle);
+		jmp PERFORM_SWAP;
+
+	ORDER_OF_Y_X_Z:
+		mov(BX, greatest);
+		mov(DX, middle);
+		mov(CX, least);
+		jmp PERFORM_SWAP;
+
+	ORDER_OF_X_Y_Z:
+		mov(BX, greatest);
+		mov(CX, middle);
+		mov(DX, least);
+		jmp PERFORM_SWAP;
+
+	ORDER_OF_X_Z_Y:
+		mov(BX, middle);
+		mov(CX, greatest);
+		jmp PERFORM_SWAP;
+
+
+	ORDER_OF_Y_Z_X:
+		mov(BX, middle);
+		mov(CX, least);
+		jmp PERFORM_SWAP;
+
+	ORDER_OF_Z_Y_X:
+		mov(DX, greatest);
+		mov(CX, middle);
+		mov(BX, least);
+		jmp RETURN_FALSE;
+
+	PERFORM_SWAP:
+		//m_X
+		mov(EDX_Register, EDX ); 
+		mov(greatest, AX);
+		mov(EAX, [EDX]);
+		
+		//m_Y
+		mov(ECX_Register, ECX );
+		mov( middle, AX );
+		mov( EAX, [ECX] );
+
+		//m_Z
+		mov(EBX_Register, EBX); 
+		mov(least, AX);
+		mov(EAX, [EBX]);
+
+		//return true
+		mov(0, EAX); 
+		mov(true, AL);
+		jmp END_SWAP;
+
+	RETURN_FALSE:
+		mov(0, EAX); //clear
+		mov(false, AL);
+		jmp END_SWAP;
+
+	END_SWAP:
+		//stdout.put("AL: ");
+		//stdout.puti8(AL);
+
+	pop(EBX);
+	pop(ECX);
+	pop(EDX);
+
+	ret();
+end swapper;
+
+begin Program_15;
+
+	stdout.put("Gimme X: ");
+	stdin.get(m_X);
+	lea( EAX, m_X ); // get address of X
+	push( EAX );
+
+	stdout.put( "Gimme Y: ");
+	stdin.get(m_Y);
+	lea( EAX, m_Y ); // get address of Y
+	push( EAX );
+
+	stdout.put("Gimme Z: ");
+	stdin.get( m_Z );
+	lea( EAX, m_Z ); // get address of Z
+	push( EAX );
+
+	call swapper;
+
+	stdout.put("After sorting, X = ");
+	stdout.puti16(m_X);
+	stdout.put(", Y = ");
+	stdout.puti16(m_Y);
+	stdout.put(", Z = ");
+	stdout.puti16(m_Z);
+	stdout.newln();
+
+end Program_15;

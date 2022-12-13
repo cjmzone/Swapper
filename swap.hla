@@ -3,6 +3,20 @@
 // Unit 15 Assignment
 // Swapper Function
 
+/*
+
+Write an HLA Assembly language program that implements a function which correctly sorts three parameters and returns a boolean value in AL 
+which should be set to true if any swaps were performed to sort the sequence in decreasing order. This function should have the following 
+signature:
+
+procedure swapper( var x : int16; var y : int16; var z : int16 ); @nodisplay; @noframe; 
+
+After invoking the function, the value of x >= the value of y >= the value of z. Your function must use reference parameters, changing the 
+callers version of the variables passed to the function. 
+
+
+*/
+
 program Program_15;
 
 #include ("stdlib.hhf");
